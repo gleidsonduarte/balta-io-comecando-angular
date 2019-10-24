@@ -9,9 +9,10 @@ import { Todo } from 'src/models/todo.models';
 })
 
 export class AppComponent {
-  public todos: Todo[] = [];
-  public title: String = 'Minhas tarefas';
-  public form: FormGroup;
+  public mode = 'list'
+  public todos : Todo[] = []
+  public title : String = 'Minhas tarefas'
+  public form : FormGroup
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -20,52 +21,60 @@ export class AppComponent {
         Validators.maxLength(60),
         Validators.required
       ])]
-    });
+    })
 
-    this.load();
+    this.load()
   }
 
   add() {
-    const title = this.form.controls['title'].value;
-    const id = this.todos.length + 1;
-    this.todos.push(new Todo(id, title, false));
-    this.save();
-    this.clear();
+    const title = this.form.controls['title'].value
+    const id = this.todos.length + 1
+    this.todos.push(new Todo(id, title, false))
+    this.save()
+    this.clear()
   }
 
   clear() {
-    this.form.reset();
+    this.form.reset()
   }
 
   alteraTexto() {
-    this.title = 'Teste';
+    this.title = 'Teste'
   }
 
   remove(todo: Todo) {
-    const index = this.todos.indexOf(todo);
+    const index = this.todos.indexOf(todo)
     if (index !== -1) {
-      this.todos.splice(index, 1);
+      this.todos.splice(index, 1)
     }
-    this.save();
+    this.save()
   }
 
   markAsDone(todo: Todo) {
-    todo.done = true;
-    this.save();
+    todo.done = true
+    this.save()
   }
 
   markAsUndone(todo: Todo) {
-    todo.done = false;
-    this.save();
+    todo.done = false
+    this.save()
   }
 
   save() {
-    const data = JSON.stringify(this.todos);
-    localStorage.setItem('todos', data);
+    const data = JSON.stringify(this.todos)
+    localStorage.setItem('todos', data)
   }
 
   load() {
     const data = localStorage.getItem('todos')
-    this.todos = JSON.parse(data)
+    if (data) {
+      this.todos = JSON.parse(data)
+    } else {
+      this.todos = []
+    }
+  }
+
+  changeMode(mode : string) {
+    this.mode = mode;
   }
 }
